@@ -433,40 +433,321 @@ You can generate route URLs by using `httpPath` and `httpUri`:
 <a href="<?=$_($url)?>">Hello</a>
 ```
 
+## Database and ORM
+
+Database connections are defined globally for the entire project not separate bundles.
+Here is how you would connect t single MySQL database:
+
+```php?start_inline=1
+return array(
+    'default' => array(
+        'driver' => 'pdo',
+        'connection' => 'mysql:host=localhost;dbname=quickstart',
+        'user'     => 'pixie',
+        'password' => 'pixie'
+    )
+);
+```
+
+> PHPixie does not only support relational databases, but also **MongoDB**.
+> You can define relationships between your MongoDB collections and relational tables
+> and query them using the same query builder without having to learn anything else.
+> At the moment no other ORM offers this level of seemless integration.
+
+Let's populate the database with some data. Imagine you are creating a todo app that allows the user
+to create projects and assign tasks to those project. Here is how the database might look like:
+
+```sql
+CREATE TABLE `projects`(
+    `id`         INT NOT NULL AUTO_INCREMENT,
+    `name`       VARCHAR(255),
+    `tasksTotal` INT DEFAULT 0,
+    `tasksDone`  INT DEFAULT 0
+);
+
+CREATE TABLE `task`(
+    `id`        INT NOT NULL AUTO_INCREMENT,
+    `projectId` INT NOT NULL,
+    `name`      VARCHAR(255),
+    `isDone`    BOOLEAN DEFAULT 0
+);
+
+INSERT INTO `projects` VALUES
+(1, 'Quickstart', 4, 3),
+(2, 'Build a website', 3, 0);
+
+INSERT INTO `tasks` VALUES
+(1, 1, 'Installing', 1),
+(2, 1, 'Routing', 1),
+(3, 1, 'Templating', 1),
+(4, 1, 'Database', 0),
+
+(5, 2, 'Design', 0),
+(6, 2, 'Develop', 0),
+(7, 2, 'Deploy', 0)
+```
+
+We can already use ORM to query these items from the database. Lets add an `orm` action to our processor:
 
 
+```php?start_inline=1
+// bundles/app/src/Project/App/HTTPProcessors/Quickstart.php
 
+//...
+    public function ormAction(Request $request)
+    {
+        $orm = $this->builder->components->orm();
+        
+        $projects = $orm->query('projects')->find();
+        
+        //Convert enttities to simple PHP objects
+        return $projects->asArray(true);
+    }
+//...
+```
 
+Now by visiting http://localhost/quickstart/orm you will get a JSON response with project data.
+Before we take a deeper look at what you can do with the PHPixie ORM lets configure a one-to-many
+relationship between projects and tasks.
 
+```php?start_inline=1
+// bundles/app/assets/config/orm.php
 
+<?php
 
+return array(
+    'relationships' => array(
+        array(
+            'type'  => 'oneToMany',
+            'owner' => 'project',
+            'items' => 'task',
+            
+            //When a project is deleted
+            //also delete all its tasks
+            'itemsOptions' => array(
+                'onOwnerDelete' => 'delete'
+            )
+        )
+    )
+);
+```
 
+### CRUD
 
+```php?start_inline=1
+$orm = $this->builder->components->orm();
 
+//Create an Entity
+$projectRepository = $orm->repository('project');
+$project = $projectRepository->create();
 
+//Using a shortcut
+$project = $orm->createEntity('project');
 
+//Edit and save the project
+$project->name = 'Buy Groceries';
+$project->save();
 
+$task = $orm->createEntity('task');
+$task->name = 'Milk';
+$task->save();
 
+//Attach task to a project
+$project->tasks->add($task);
 
+//Deleting a project
+$project->delete();
 
+//Iterating over projects and tasks
+$projects = $orm->query('project')->find();
+foreach($projects as $project) {
+    foreach($project->tasks() as $task) {
+        //...
+    }
+}
+```
 
+### Querying
 
+Here is just some things that you can do with the ORM queries now:
 
+```php?start_inline=1
+$orm = $this->builder->components->orm();
 
+//Find project by name
+$orm->query('projects')->where('name', 'Quickstart')->findOne();
 
+//Query by id
+$orm->query('projects')->in($id)->findOne();
 
+//Query by multiple ids
+$orm->query('projects')->in($ids)->findOne();
 
+//Multiple conditions
+$orm->query('projects')
+    ->where('tasksTotal', '>', 2)
+    ->or('tasksDone', '<', 5)
+    ->find();
+    
+//Conditions groups
+//WHERE name = 'Quickstart' OR ( ... )
+$orm->query('projects')
+    ->where('name', 'Quickstart')
+    ->or(function($query) {
+        $querty
+            ->where('tasksTotal', '>', 2)
+            ->or('tasksDone', '<', 5);
+    })
+    ->find();
 
+//Alternative syntax for
+//nested conditions
+$orm->query('projects')
+    ->where('name', 'Quickstart')
+    ->startWhereConditionGroup('or')
+        ->where('tasksTotal', '>', 2)
+        ->or('tasksDone', '<', 5)
+    ->endGroup()
+    ->find();
+    
+//Compare columns using '*' in operators
+//Find projects where tasksTotal = tasksDone
+$orm->query('projects')
+    ->where('tasksTotal', '=*', 'tasksDone')
+    ->find();
 
+//Find projects that have at least a single task
+$orm->query('projects')
+    ->relatedTo('tasks')
+    ->find();
+    
+//Find a project related to a specific task
+$orm->query('projects')
+    ->where('tasks.name', 'Routing')
+    ->find();
 
+//Or like this
+$orm->query('projects')
+    ->orRelatedTo('tasks', function($query) {
+        $query->where('name', 'Routing');
+    })
+    ->find();
 
+//Load projects while preloading
+//all of their tasks
+$orm->query('projects')->find(array('tasks'));
 
+//Update all projects
+$orm->query('projects')->update(array(
+    'tasksDone' => 0
+));
 
+//Count completed projects
+//and reuse the same query
+//Useful for pagination
+$query = $orm->query('projects')
+    ->where('tasksTotal', '=*', 'tasksDone');
+    
+$count = $query->count();
 
+$query
+    ->limit(5)
+    ->offset(0)
+    ->find();
+```
 
+The ORRM component features multiple optimzations to help you reduce the number of queries.
+For example it is possible to attach multiple tasks to a single project without getting them all one by one.
 
+```
+$orm = $this->builder->components->orm();
 
+//Query representing the first project in the database
+$projectQuery = $orm->query('project');
 
+//Query representing the first 5 tasks in the database
+$tasksQuery = $orm->query('tasks')->limit(5);
 
+//No database query has been executed yet
 
+//Associate tasks with the project
+//in a single query
+$projectQuery->tasks->add($tasksQuery);
+```
 
+> Using queries instead of adding entities one by one greatly reduced
+> the amount of database queries required. Especially in the case of many-to-many relationships.
+> As with MongoDB support, no other PHP ORM has this feature at this point.
+
+### Extending entities
+
+You might want to extend the entity classes for your models to add additional functionality.
+Instead of doing this directly and thus coupling your code to the ORM and the database PHPixie
+allows you to define wrappers that wrap around actual ORM entities but are entirely decoupled from it.
+This also means that your ORM classes will be easy to test and won't require fixtures.
+
+Here is a simple wrapper:
+
+```php?start_inline=1
+// bundles/app/src/Project/App/ORMWrappers/Project;
+
+namespace Project\App\ORMWrappers;
+
+class Project extends \PHPixie\ORM\Wrappers\Type\Database\Entity
+{
+    //We add a simple method that will tell us
+    //whether the project is considered done
+    public function isDone()
+    {
+        return $this->tasksDone === $this->tasksTotal;
+    }
+}
+```
+
+Now we need to create an ORMWrappers class and register it with the bundle.
+This class will be used by the ORM to wrap the entities with our wrapper
+
+```php?start_inline=1
+// bundles/app/src/Project/App/ORMWrappers.php;
+namespace Project\App;
+
+class ORMWrappers extends \PHPixie\ORM\Wrappers\Implementation
+{
+    //declare wrapped entities
+    protected $databaseEntities = array(
+        'project'
+    );
+    
+    public function projectEntity($entity)
+    {
+        return new ORMWrappers\Project($entity);
+    }
+}
+```
+
+And add it to the Builder:
+
+```php?start_inline=1
+// bundles/app/src/Project/App/Builder.php;
+
+//...
+    protected function buildOrmWrappers()
+    {
+        return new ORMWrappers();
+    }
+//...
+```
+
+Now lets try using it
+
+```php?start_inline=1
+//Find the first project
+$project = $orm->query('projects')->findOne();
+
+//Check if it is done
+$project->isDone();
+```
+
+> You can also provide wrappers for Queries and Repositories to extend their behaviour,
+> like for example providing a method that will automatically add multiple conditions
+> to the query you are building.
