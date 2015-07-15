@@ -38,7 +38,7 @@ But you can still achieve a Controller-like behavior, which is actually used by 
 
 Let's now create a new `Quickstart` processor to use with the tutorial:
 
-```php?start_inline=1
+```php
 // bundles/app/src/Project/App/HTTPProcessors/Quickstart.php
 
 namespace Project\App\HTTPProcessors;
@@ -72,7 +72,7 @@ class Quickstart extends \PHPixie\DefaultBundle\Processor\HTTP\Actions
 
 And now register it with the bundle:
 
-```php?start_inline=1
+```php
 // bundles/app/src/Project/App/HTTPProcessors.php
 
 //...
@@ -92,7 +92,7 @@ Now we are all set up to try out the framework!
 A popular use case is to have URLs like `/quickstart/view/4` including a name or an id of some item.
 First let's create an appropriate action in our processor:
 
-```php?start_inline=1
+```php
 // bundles/app/src/Project/App/HTTPProcessors/Quickstart.php
 
 //...
@@ -108,7 +108,7 @@ First let's create an appropriate action in our processor:
 Now we must also configure a new route to support the `id` parameter.
 For that let's first look at the route configuration file:
 
-```php?start_inline=1
+```php
 // bundles/app/assets/config/routeResolver
 
 return array(
@@ -139,7 +139,7 @@ return array(
 ```
 
 The route we want to add would look like this:
-```php?start_inline=1
+```php
 'view' => array(
     'type'     => 'pattern',
     
@@ -162,7 +162,7 @@ Now navigatie to http://localhost/quickstart/view/5 and you should see '5' as a 
 As a quick example of some more advanced routing features here is what you could to to prefix multiple routes
 with a common pattern. Don't worry if it looks a bit complicated, you don't need it for now:
 
-```php?start_inline=1
+```php
 array(
     
     //Define a common prefix for routes
@@ -202,7 +202,7 @@ makes changing them easier and less error-prone.
 As you probably already noticed each action takes a `Request` as a parameter and returns a response.
 Accessing request data can be done simply by:
 
-```php?start_inline=1
+```php
 //$_GET['name'] 
 $request->query()->get('name');
 
@@ -250,7 +250,7 @@ foreach($data as $key => $value) {
 
 As for the output it's even simpler:
 
-```php?start_inline=1
+```php
 //A simple string message
 return 'hello';
 
@@ -285,7 +285,7 @@ It already contains two templates used to display the default greeting by the `H
 
 Let's start by creating a simple template:
 
-```html?start_inline=1
+```html
 <!-- bundles/app/assets/templates/quickstart/message.php -->
 
 <!--
@@ -298,7 +298,7 @@ don't break your layout and prevents some XSS attacks
 
 Now lets add another action to the Quickstart processor to render it:
 
-```php?start_inline=1
+```php
 // bundles/app/src/Project/App/HTTPProcessors/Quickstart.php
 
 //...
@@ -320,7 +320,7 @@ Visit http://localhost/quickstart/render and see the result
 If you prefer adding variables to the template one by one instead of passing an array in one go
 you can also use the alternative approach:
 
-```php?start_inline=1
+```php
 $template = $this->components()->template();
 
 $container = $template->get('app:quickstart/messsage');
@@ -336,7 +336,7 @@ return $container;
 
 First we'll add a layout:
 
-```php?start_inline=1
+```php
 <!-- bundles/app/assets/templates/quickstart/layout.php -->
 
 <h1>Quickstart</h1>
@@ -349,7 +349,7 @@ First we'll add a layout:
 
 and update the `message` template:
 
-```html?start_inline=1
+```html
 <!-- bundles/app/assets/templates/quickstart/message.php -->
 
 <?php $this->layout('app:quickstart/layout');?>
@@ -361,7 +361,7 @@ Now http://localhost/quickstart/render will display the template wrapped inside 
 
 Layouts also support blocks to allow child templates to override and append content to their layouts.
 
-```php?start_inline=1
+```php
 <!-- bundles/app/assets/templates/quickstart/layout.php -->
 
 <!-- Define a 'header' block -->
@@ -379,7 +379,7 @@ Layouts also support blocks to allow child templates to override and append cont
 ```
 
 This allows us to add content to the block in the child template:
-```html?start_inline=1
+```html
 <!-- bundles/app/assets/templates/quickstart/message.php -->
 <?php $this->layout('app:quickstart/layout');?>
 
@@ -394,7 +394,7 @@ By default if multiple templates add content to the same block the content will 
 But we can also tell the layout to only add content if it has not been defined by the child template.
 This way adding content to it from the child template will override parent content.
 
-```php?start_inline=1
+```php
 <!-- bundles/app/assets/templates/quickstart/layout.php -->
 
 <?php $this->startBlock('header', true); ?>
@@ -413,7 +413,7 @@ $this->startBlock('header', false, true);
 
 You can also include a subtemplate directly by using:
 
-```html?start_inline=1
+```html
 <?php include $this->resolve('some:template');?>
 ```
 
@@ -421,7 +421,7 @@ You can also include a subtemplate directly by using:
 
 You can generate route URLs by using `httpPath` and `httpUri`:
 
-```html?start_inline=1
+```html
 <?php $url=$this->httpPath(
         'app.default',
         array(
@@ -438,7 +438,7 @@ You can generate route URLs by using `httpPath` and `httpUri`:
 Database connections are defined globally for the entire project not separate bundles.
 Here is how you would connect t single MySQL database:
 
-```php?start_inline=1
+```php
 return array(
     'default' => array(
         'driver' => 'pdo',
@@ -490,7 +490,7 @@ INSERT INTO `tasks` VALUES
 We can already use ORM to query these items from the database. Lets add an `orm` action to our processor:
 
 
-```php?start_inline=1
+```php
 // bundles/app/src/Project/App/HTTPProcessors/Quickstart.php
 
 //...
@@ -510,7 +510,7 @@ Now by visiting http://localhost/quickstart/orm you will get a JSON response wit
 Before we take a deeper look at what you can do with the PHPixie ORM lets configure a one-to-many
 relationship between projects and tasks.
 
-```php?start_inline=1
+```php
 // bundles/app/assets/config/orm.php
 
 <?php
@@ -534,7 +534,7 @@ return array(
 
 ### CRUD
 
-```php?start_inline=1
+```php
 $orm = $this->builder->components->orm();
 
 //Create an Entity
@@ -571,7 +571,7 @@ foreach($projects as $project) {
 
 Here is just some things that you can do with the ORM queries now:
 
-```php?start_inline=1
+```php
 $orm = $this->builder->components->orm();
 
 //Find project by name
@@ -688,7 +688,7 @@ This also means that your ORM classes will be easy to test and won't require fix
 
 Here is a simple wrapper:
 
-```php?start_inline=1
+```php
 // bundles/app/src/Project/App/ORMWrappers/Project;
 
 namespace Project\App\ORMWrappers;
@@ -707,7 +707,7 @@ class Project extends \PHPixie\ORM\Wrappers\Type\Database\Entity
 Now we need to create an ORMWrappers class and register it with the bundle.
 This class will be used by the ORM to wrap the entities with our wrapper
 
-```php?start_inline=1
+```php
 // bundles/app/src/Project/App/ORMWrappers.php;
 namespace Project\App;
 
@@ -727,7 +727,7 @@ class ORMWrappers extends \PHPixie\ORM\Wrappers\Implementation
 
 And add it to the Builder:
 
-```php?start_inline=1
+```php
 // bundles/app/src/Project/App/Builder.php;
 
 //...
@@ -740,7 +740,7 @@ And add it to the Builder:
 
 Now lets try using it
 
-```php?start_inline=1
+```php
 //Find the first project
 $project = $orm->query('projects')->findOne();
 
