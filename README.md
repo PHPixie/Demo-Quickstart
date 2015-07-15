@@ -277,3 +277,196 @@ return $httpResponses->downloadFile('pixie.jpg', 'image/png', $filePath);
 return $httpResponses->download('report.csv', 'text/csv', $contents);
 ```
 
+## Templating
+
+PHPixie comes with a powerful templating engine that supports layouts, blocks, partials, custom extensions and formats.
+By default the bundle is configured to locate templates from the `bundles/app/assets/templates` folder.
+It already contains two templates used to display the default greeting by the `Hello` processor. 
+
+Let's start by creating a simple template:
+
+```html?start_inline=1
+<!-- bundles/app/assets/templates/quickstart/message.php -->
+
+<!--
+The $_() function is used to HTML encode your strings.
+Which makes sure string containing special symbols 
+don't break your layout and prevents some XSS attacks
+-->
+<p><?=$_($message)?></p>
+```
+
+Now lets add another action to the Quickstart processor to render it:
+
+```php?start_inline=1
+// bundles/app/src/Project/App/HTTPProcessors/Quickstart.php
+
+//...
+    public function renderAction(Request $request)
+    {
+        return $this->components()->template()->render(
+            'app:quickstart/messsage',
+            array(
+                'message' => 'hello'
+            )
+        );
+    }
+//...
+}
+```
+
+Visit http://localhost/quickstart/render and see the result
+
+If you prefer adding variables to the template one by one instead of passing an array in one go
+you can also use the alternative approach:
+
+```php?start_inline=1
+$template = $this->components()->template();
+
+$container = $template->get('app:quickstart/messsage');
+$container->message = 'hello';
+return $container->render();
+
+//Or simply return the container
+//and it will be rendered automatically
+return $container;
+```
+
+### Layouts
+
+First we'll add a layout:
+
+```php?start_inline=1
+<!-- bundles/app/assets/templates/quickstart/layout.php -->
+
+<h1>Quickstart</h1>
+
+<div>
+    <!-- This will be replaced by the child template -->
+    <?=$this->childContent();?>
+</div>
+```
+
+and update the `message` template:
+
+```html?start_inline=1
+<!-- bundles/app/assets/templates/quickstart/message.php -->
+
+<?php $this->layout('app:quickstart/layout');?>
+
+<p><?=$_($message)?></p>
+```
+
+Now http://localhost/quickstart/render will display the template wrapped inside the layout.
+
+Layouts also support blocks to allow child templates to override and append content to their layouts.
+
+```php?start_inline=1
+<!-- bundles/app/assets/templates/quickstart/layout.php -->
+
+<!-- Define a 'header' block -->
+<?php $this->startBlock('header'); ?>
+    <h1>Quickstart</h1>
+<?php $this->endBlock(); ?>
+
+<!-- And output it -->
+<?=$this->block('header') ?>
+
+<div>
+    <!-- This will be replaced by the child template -->
+    <?=$this->childContent();?>
+</div>
+```
+
+This allows us to add content to the block in the child template:
+```html?start_inline=1
+<!-- bundles/app/assets/templates/quickstart/message.php -->
+<?php $this->layout('app:quickstart/layout');?>
+
+<?php $this->startBlock('header'); ?>
+    <h2>Message</h2>
+<?php $this->endBlock(); ?>
+
+<p><?=$_($message)?></p>
+```
+
+By default if multiple templates add content to the same block the content will be appended.
+But we can also tell the layout to only add content if it has not been defined by the child template.
+This way adding content to it from the child template will override parent content.
+
+```php?start_inline=1
+<!-- bundles/app/assets/templates/quickstart/layout.php -->
+
+<?php $this->startBlock('header', true); ?>
+    <h1>Quickstart</h1>
+<?php $this->endBlock(); ?>
+
+<!-- ... -->
+```
+
+Or you may decide to prepend blocks in reverse order, for this use:
+```
+$this->startBlock('header', false, true);
+```
+
+### Includes
+
+You can also include a subtemplate directly by using:
+
+```html?start_inline=1
+<?php include $this->resolve('some:template');?>
+```
+
+### URL generation
+
+You can generate route URLs by using `httpPath` and `httpUri`:
+
+```html?start_inline=1
+<?php $url=$this->httpPath(
+        'app.default',
+        array(
+            'processor' => 'hello',
+            'action'    => 'greet'
+        )
+    );
+    ?>
+<a href="<?=$_($url)?>">Hello</a>
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
