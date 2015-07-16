@@ -704,8 +704,7 @@ class Project extends \PHPixie\ORM\Wrappers\Type\Database\Entity
 }
 ```
 
-Now we need to create an ORMWrappers class and register it with the bundle.
-This class will be used by the ORM to wrap the entities with our wrapper
+Now we need to register this wrapper with the bundle:
 
 ```php
 // bundles/app/src/Project/App/ORMWrappers.php;
@@ -713,7 +712,7 @@ namespace Project\App;
 
 class ORMWrappers extends \PHPixie\ORM\Wrappers\Implementation
 {
-    //declare wrapped entities
+    //Names of the entities we want to wrap
     protected $databaseEntities = array(
         'project'
     );
@@ -723,19 +722,6 @@ class ORMWrappers extends \PHPixie\ORM\Wrappers\Implementation
         return new ORMWrappers\Project($entity);
     }
 }
-```
-
-And add it to the Builder:
-
-```php
-// bundles/app/src/Project/App/Builder.php;
-
-//...
-    protected function buildOrmWrappers()
-    {
-        return new ORMWrappers();
-    }
-//...
 ```
 
 Now lets try using it
