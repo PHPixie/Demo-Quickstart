@@ -1,18 +1,3 @@
-- [Installing](#)
-- [Bundles](#)
-- [Processors](#)
-- [Routing](#)
-- [Input and output](#)
-- [Templating](#)
-	- [Layouts](#)
-	- [Includes](#)
-	- [URL generation](#)
-- [Database and ORM](#)
-	- [Entities](#)
-	- [Querying](#)
-	- [Extending entities](#)
-- [There's more](#)
-
 This quickstart guide will show you the basics of developing with PHPixie and it's components.
 If you have some experience with any other PHP framework soon you will feel right at home.
 
