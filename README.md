@@ -531,8 +531,9 @@ return array(
     )
 );
 ```
+### Entities
 
-### CRUD
+Creating, updating and deleting entities is straightforward:
 
 ```php
 $orm = $this->builder->components->orm();
@@ -737,3 +738,9 @@ $project->isDone();
 > You can also provide wrappers for Queries and Repositories to extend their behaviour,
 > like for example providing a method that will automatically add multiple conditions
 > to the query you are building.
+
+## There's more
+
+Now you have everything you need to get started with PHPixie 3, but there is much more it can offer you.
+Each of the PHPixie components has an extensive list of features that are beyond the scope of this quickstart
+and can be used separately without the rest of the framework.
