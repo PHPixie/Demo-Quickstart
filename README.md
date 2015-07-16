@@ -63,7 +63,7 @@ class Quickstart extends \PHPixie\DefaultBundle\Processor\HTTP\Actions
     // This is the default action
     public function defaultAction(Request $request)
     {
-        return "Quickstart tutorial"
+        return "Quickstart tutorial";
     }
     
     //We will be adding methods here in a moment
@@ -78,7 +78,9 @@ And now register it with the bundle:
 //...
     protected function buildQuickstartProcessor()
     {
-        return new HTTPProcessors\Quickstart($this);
+        return new HTTPProcessors\Quickstart(
+            $this->builder
+        );
     }
 //...
 ```
@@ -104,6 +106,7 @@ First let's create an appropriate action in our processor:
     
 //...
 }
+```
 
 Now we must also configure a new route to support the `id` parameter.
 For that let's first look at the route configuration file:
@@ -305,8 +308,10 @@ Now lets add another action to the Quickstart processor to render it:
 //...
     public function renderAction(Request $request)
     {
-        return $this->components()->template()->render(
-            'app:quickstart/messsage',
+        $template = $this->builder->components()->template();
+        
+        return $template->render(
+            'app:quickstart/message',
             array(
                 'message' => 'hello'
             )
@@ -324,7 +329,7 @@ you can also use the alternative approach:
 ```php
 $template = $this->components()->template();
 
-$container = $template->get('app:quickstart/messsage');
+$container = $template->get('app:quickstart/message');
 $container->message = 'hello';
 return $container->render();
 
@@ -440,6 +445,8 @@ Database connections are defined globally for the entire project not separate bu
 Here is how you would connect t single MySQL database:
 
 ```php
+// assets/config/database.php
+
 return array(
     'default' => array(
         'driver' => 'pdo',
@@ -460,14 +467,14 @@ to create projects and assign tasks to those project. Here is how the database m
 
 ```sql
 CREATE TABLE `projects`(
-    `id`         INT NOT NULL AUTO_INCREMENT,
+    `id`         INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name`       VARCHAR(255),
     `tasksTotal` INT DEFAULT 0,
     `tasksDone`  INT DEFAULT 0
 );
 
-CREATE TABLE `task`(
-    `id`        INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE `tasks`(
+    `id`        INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `projectId` INT NOT NULL,
     `name`      VARCHAR(255),
     `isDone`    BOOLEAN DEFAULT 0
@@ -485,7 +492,7 @@ INSERT INTO `tasks` VALUES
 
 (5, 2, 'Design', 0),
 (6, 2, 'Develop', 0),
-(7, 2, 'Deploy', 0)
+(7, 2, 'Deploy', 0);
 ```
 
 We can already use ORM to query these items from the database. Lets add an `orm` action to our processor:
@@ -499,7 +506,7 @@ We can already use ORM to query these items from the database. Lets add an `orm`
     {
         $orm = $this->builder->components->orm();
         
-        $projects = $orm->query('projects')->find();
+        $projects = $orm->query('project')->find();
         
         //Convert enttities to simple PHP objects
         return $projects->asArray(true);
@@ -577,23 +584,23 @@ Here is just some things that you can do with the ORM queries now:
 $orm = $this->builder->components->orm();
 
 //Find project by name
-$orm->query('projects')->where('name', 'Quickstart')->findOne();
+$orm->query('project')->where('name', 'Quickstart')->findOne();
 
 //Query by id
-$orm->query('projects')->in($id)->findOne();
+$orm->query('project')->in($id)->findOne();
 
 //Query by multiple ids
-$orm->query('projects')->in($ids)->findOne();
+$orm->query('project')->in($ids)->findOne();
 
 //Multiple conditions
-$orm->query('projects')
+$orm->query('project')
     ->where('tasksTotal', '>', 2)
     ->or('tasksDone', '<', 5)
     ->find();
     
 //Conditions groups
 //WHERE name = 'Quickstart' OR ( ... )
-$orm->query('projects')
+$orm->query('project')
     ->where('name', 'Quickstart')
     ->or(function($query) {
         $querty
@@ -604,7 +611,7 @@ $orm->query('projects')
 
 //Alternative syntax for
 //nested conditions
-$orm->query('projects')
+$orm->query('project')
     ->where('name', 'Quickstart')
     ->startWhereConditionGroup('or')
         ->where('tasksTotal', '>', 2)
@@ -614,40 +621,40 @@ $orm->query('projects')
     
 //Compare columns using '*' in operators
 //Find projects where tasksTotal = tasksDone
-$orm->query('projects')
+$orm->query('project')
     ->where('tasksTotal', '=*', 'tasksDone')
     ->find();
 
 //Find projects that have at least a single task
-$orm->query('projects')
-    ->relatedTo('tasks')
+$orm->query('project')
+    ->relatedTo('task')
     ->find();
     
 //Find a project related to a specific task
-$orm->query('projects')
+$orm->query('project')
     ->where('tasks.name', 'Routing')
     ->find();
 
 //Or like this
-$orm->query('projects')
-    ->orRelatedTo('tasks', function($query) {
+$orm->query('project')
+    ->orRelatedTo('task', function($query) {
         $query->where('name', 'Routing');
     })
     ->find();
 
 //Load projects while preloading
 //all of their tasks
-$orm->query('projects')->find(array('tasks'));
+$orm->query('project')->find(array('task'));
 
 //Update all projects
-$orm->query('projects')->update(array(
+$orm->query('project')->update(array(
     'tasksDone' => 0
 ));
 
 //Count completed projects
 //and reuse the same query
 //Useful for pagination
-$query = $orm->query('projects')
+$query = $orm->query('project')
     ->where('tasksTotal', '=*', 'tasksDone');
     
 $count = $query->count();
@@ -668,7 +675,7 @@ $orm = $this->builder->components->orm();
 $projectQuery = $orm->query('project');
 
 //Query representing the first 5 tasks in the database
-$tasksQuery = $orm->query('tasks')->limit(5);
+$tasksQuery = $orm->query('task')->limit(5);
 
 //No database query has been executed yet
 
@@ -691,7 +698,7 @@ This also means that your ORM classes will be easy to test and won't require fix
 Here is a simple wrapper:
 
 ```php
-// bundles/app/src/Project/App/ORMWrappers/Project;
+// bundles/app/src/Project/App/ORMWrappers/Project.php;
 
 namespace Project\App\ORMWrappers;
 
@@ -730,7 +737,7 @@ Now lets try using it
 
 ```php
 //Find the first project
-$project = $orm->query('projects')->findOne();
+$project = $orm->query('project')->findOne();
 
 //Check if it is done
 $project->isDone();
@@ -741,6 +748,8 @@ $project->isDone();
 > to the query you are building.
 
 ## There's more
+
+The entire code for this project can be found in the [Demo-Quickstart](https://github.com/phpixie/demo-quickstart) repository.
 
 Now you have everything you need to get started with PHPixie 3, but there is much more it can offer you.
 Each of the PHPixie components has an extensive list of features that are beyond the scope of this quickstart
