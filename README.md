@@ -63,7 +63,7 @@ class Quickstart extends \PHPixie\DefaultBundle\Processor\HTTP\Actions
     // This is the default action
     public function defaultAction(Request $request)
     {
-        return "Quikcstart tutorial"
+        return "Quickstart tutorial"
     }
     
     //We will be adding methods here in a moment
@@ -139,6 +139,7 @@ return array(
 ```
 
 The route we want to add would look like this:
+
 ```php
 'view' => array(
     'type'     => 'pattern',
@@ -254,7 +255,7 @@ As for the output it's even simpler:
 //A simple string message
 return 'hello';
 
-//To build a properly encoded JSON reponse
+//To build a properly encoded JSON response
 //just return any array or object
 return array('success' => true);
 
@@ -273,7 +274,7 @@ return $httpResponses->stringResponse('Not found', $headers = array(), 404);
 return $httpResponses->downloadFile('pixie.jpg', 'image/png', $filePath);
 
 //Initialize a file download from string
-//Usefull for CSVs
+//Useful for CSVs
 return $httpResponses->download('report.csv', 'text/csv', $contents);
 ```
 
@@ -452,7 +453,7 @@ return array(
 > PHPixie does not only support relational databases, but also **MongoDB**.
 > You can define relationships between your MongoDB collections and relational tables
 > and query them using the same query builder without having to learn anything else.
-> At the moment no other ORM offers this level of seemless integration.
+> At the moment no other ORM offers this level of seamless integration.
 
 Let's populate the database with some data. Imagine you are creating a todo app that allows the user
 to create projects and assign tasks to those project. Here is how the database might look like:
@@ -657,7 +658,7 @@ $query
     ->find();
 ```
 
-The ORM component features multiple optimzations to help you reduce the number of queries.
+The ORM component features multiple optimizations to help you reduce the number of queries.
 For example it is possible to attach multiple tasks to a single project without getting them all one by one.
 
 ```
