@@ -657,7 +657,7 @@ $query
     ->find();
 ```
 
-The ORRM component features multiple optimzations to help you reduce the number of queries.
+The ORM component features multiple optimzations to help you reduce the number of queries.
 For example it is possible to attach multiple tasks to a single project without getting them all one by one.
 
 ```
