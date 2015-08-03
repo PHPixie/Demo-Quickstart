@@ -171,14 +171,14 @@ array(
     
     //Define a common prefix for routes
     'type'      => 'prefix',
-    'pattern'   => 'user/<userId>/',
+    'path'   => 'user/<userId>/',
     'resolver' => array(
         'type'      => 'group',
         'resolvers' => array(
         
             //would handle /user/5/friends to Friends::userFriends()
             'friends' => array(
-                'pattern'  => 'friends',
+                'path'  => 'friends',
                 'defaults' => array(
                     'processor' => 'friends',
                     'action'    => 'usersFriends'
@@ -187,7 +187,7 @@ array(
             
             //would handle /user/5/friends to Profile::userProfile()
             'profile' => array(
-                'pattern'  => 'profile',
+                'path'  => 'profile',
                 'defaults' => array(
                     'processor' => 'profile',
                     'action'    => 'userProfile'
