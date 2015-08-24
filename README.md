@@ -6,7 +6,7 @@ If you have some experience with any other PHP framework soon you will feel righ
 First, install Composer if you don't have it already and run the following command:
 
 ```
-php composer.phar create-project phpixie/project your_project_folder 3.*-dev
+php composer.phar create-project phpixie/project your_project_folder "3.*-dev"
 ```
 
 If you are on Windows create a symlink from the `/bundles/app/web` folder to `/web/bundles/app`.
