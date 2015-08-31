@@ -20,6 +20,15 @@ location / {
 }
 ```
 
+And here are rules for Apache2 (put into .htaccess in project root folder):
+
+```
+RewriteEngine on
+RewriteBase /
+RewriteCond %{REQUEST_URI} !web/
+RewriteRule (.*) /web/$1 [L]
+```
+
 Now visit http://localhost/ in your browser and you should see a greeting.
 
 ## Bundles
@@ -73,7 +82,7 @@ class Quickstart extends \PHPixie\DefaultBundle\Processor\HTTP\Actions
 And now register it with the bundle:
 
 ```php
-// bundles/app/src/Project/App/HTTPProcessors.php
+// bundles/app/src/Project/App/HTTPProcessor.php
 
 //...
     protected function buildQuickstartProcessor()
@@ -285,7 +294,7 @@ return $httpResponses->download('report.csv', 'text/csv', $contents);
 
 PHPixie comes with a powerful templating engine that supports layouts, blocks, partials, custom extensions and formats.
 By default the bundle is configured to locate templates from the `bundles/app/assets/templates` folder.
-It already contains two templates used to display the default greeting by the `Hello` processor. 
+It already contains two templates used to display the default greeting by the `Greet` processor. 
 
 Let's start by creating a simple template:
 
@@ -297,7 +306,7 @@ The $_() function is used to HTML encode your strings.
 Which makes sure string containing special symbols 
 don't break your layout and prevents some XSS attacks
 -->
-<p><?=$_($message)?></p>
+<p><?php echo $_($message); ?></p>
 ```
 
 Now lets add another action to the Quickstart processor to render it:
@@ -349,7 +358,7 @@ First we'll add a layout:
 
 <div>
     <!-- This will be replaced by the child template -->
-    <?=$this->childContent();?>
+    <?php echo $this->childContent(); ?>
 </div>
 ```
 
@@ -360,7 +369,7 @@ and update the `message` template:
 
 <?php $this->layout('app:quickstart/layout');?>
 
-<p><?=$_($message)?></p>
+<p><?php echo $_($message); ?></p>
 ```
 
 Now http://localhost/quickstart/render will display the template wrapped inside the layout.
@@ -376,16 +385,16 @@ Layouts also support blocks to allow child templates to override and append cont
 <?php $this->endBlock(); ?>
 
 <!-- And output it -->
-<?=$this->block('header') ?>
+<?php echo $this->block('header'); ?>
 
 <div>
     <!-- This will be replaced by the child template -->
-    <?=$this->childContent();?>
+    <?php echo $this->childContent(); ?>
 </div>
 ```
 
 This allows us to add content to the block in the child template:
-```html
+```php
 <!-- bundles/app/assets/templates/quickstart/message.php -->
 <?php $this->layout('app:quickstart/layout');?>
 
@@ -393,7 +402,7 @@ This allows us to add content to the block in the child template:
     <h2>Message</h2>
 <?php $this->endBlock(); ?>
 
-<p><?=$_($message)?></p>
+<p><?php echo $_($message); ?></p>
 ```
 
 By default if multiple templates add content to the same block the content will be appended.
@@ -411,7 +420,7 @@ This way adding content to it from the child template will override parent conte
 ```
 
 Or you may decide to prepend blocks in reverse order, for this use:
-```
+```php
 $this->startBlock('header', false, true);
 ```
 
@@ -419,7 +428,7 @@ $this->startBlock('header', false, true);
 
 You can also include a subtemplate directly by using:
 
-```html
+```php
 <?php include $this->resolve('some:template');?>
 ```
 
@@ -427,7 +436,7 @@ You can also include a subtemplate directly by using:
 
 You can generate route URLs by using `httpPath` and `httpUri`:
 
-```html
+```php
 <?php $url=$this->httpPath(
         'app.default',
         array(
@@ -436,7 +445,7 @@ You can generate route URLs by using `httpPath` and `httpUri`:
         )
     );
     ?>
-<a href="<?=$_($url)?>">Hello</a>
+<a href="<?php echo $_($url); ?>">Hello</a>
 ```
 
 ## Database and ORM
@@ -668,7 +677,7 @@ $query
 The ORM component features multiple optimizations to help you reduce the number of queries.
 For example it is possible to attach multiple tasks to a single project without getting them all one by one.
 
-```
+```php
 $orm = $this->builder->components->orm();
 
 //Query representing the first project in the database
