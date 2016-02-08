@@ -394,6 +394,7 @@ Layouts also support blocks to allow child templates to override and append cont
 ```
 
 This allows us to add content to the block in the child template:
+
 ```php
 <!-- bundles/app/assets/templates/quickstart/message.php -->
 <?php $this->layout('app:quickstart/layout');?>
@@ -420,6 +421,7 @@ This way adding content to it from the child template will override parent conte
 ```
 
 Or you may decide to prepend blocks in reverse order, for this use:
+
 ```php
 $this->startBlock('header', false, true);
 ```
