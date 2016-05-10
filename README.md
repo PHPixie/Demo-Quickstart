@@ -190,11 +190,11 @@ array(
                 'path'  => 'friends',
                 'defaults' => array(
                     'processor' => 'friends',
-                    'action'    => 'usersFriends'
+                    'action'    => 'userFriends'
                 )
             ),
             
-            //would handle /user/5/friends to Profile::userProfile()
+            //would handle /user/5/profile to Profile::userProfile()
             'profile' => array(
                 'path'  => 'profile',
                 'defaults' => array(
