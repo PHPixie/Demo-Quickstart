@@ -3,7 +3,7 @@ If you have some experience with any other PHP framework soon you will feel righ
 
 ## Installing
 
-First, install Composer if you don't have it already and run the following command:
+First, [install Composer](https://getcomposer.org/download/) if you don't have it already and run the following command:
 
 ```
 php composer.phar create-project phpixie/project your_project_folder
@@ -16,7 +16,7 @@ Your HTTP server should point to the `/web` directory. In case you use Nginx you
 
 ```
 location / {
-            try_files $uri $uri/ /index.php;
+    try_files $uri $uri/ /index.php;
 }
 ```
 
@@ -29,12 +29,12 @@ RewriteCond %{REQUEST_URI} !web/
 RewriteRule (.*) /web/$1 [L]
 ```
 
-Now visit http://localhost/ in your browser and you should see a greeting.
+Now visit [http://localhost/](http://localhost/) in your browser and you should see a greeting.
 
 ## Bundles
 
 PHPixie 3 supports organizing your project into bundles to make it easy to reuse your code in other projects.
-For example a user system that handles login and registration could be organized into a bundle and used in a 
+For example a user system that handles login and registration could be organized into a bundle and used in a
 different project.
 
 When you create PHPixie project it comes preconfigured with a single `app` bundle in the `/bundles/app` folder.
@@ -63,18 +63,18 @@ class Quickstart extends \PHPixie\DefaultBundle\Processor\HTTP\Actions
      * @var Project\App\HTTPProcessors\Builder
      */
     protected $builder;
-    
+
     public function __construct($builder)
     {
         $this->builder = $builder;
     }
-    
+
     // This is the default action
     public function defaultAction(Request $request)
     {
         return "Quickstart tutorial";
     }
-    
+
     //We will be adding methods here in a moment
 }
 ```
@@ -94,7 +94,7 @@ And now register it with the bundle:
 //...
 ```
 
-Accessing http://localhost/quickstart/ now will yield a "Quickstart tutorial" message.
+Accessing [http://localhost/quickstart/](http://localhost/quickstart/) now will yield a "Quickstart tutorial" message.
 
 Now we are all set up to try out the framework!
 
@@ -112,7 +112,7 @@ First let's create an appropriate action in our processor:
         //Output the 'id' parameter
         return $request->attributes()->get('id');
     }
-    
+
 //...
 }
 ```
@@ -127,17 +127,17 @@ return array(
     //this allows us to group routes into one
     'type'      => 'group',
     'resolvers' => array(
-        
+
         //...We will add new routes here..
-        
+
         //The 'default' route
         'default' => array(
         //this type of route does pattern matching
             'type'     => 'pattern',
-            
+
             //brackets mean that the part in them is optional
             'path'     => '(<processor>(/<action>))',
-            
+
             //Default set of parameters to use
             //E.g. if the url is simply /hello
             //The 'action' parameter will default to 'greet'
@@ -155,7 +155,7 @@ The route we want to add would look like this:
 ```php
 'view' => array(
     'type'     => 'pattern',
-    
+
     //Since the id parameter is mandatory
     //we don't wrap it in brackets
     'path'     => 'quickstart/view/<id>',
@@ -170,21 +170,21 @@ The route we want to add would look like this:
 > So it is important to put specific routes before more general ones in
 > the config file.
 
-Now navigatie to http://localhost/quickstart/view/5 and you should see '5' as a response.
+Now navigate to [http://localhost/quickstart/view/5](http://localhost/quickstart/view/5) and you should see '5' as a response.
 
 As a quick example of some more advanced routing features here is what you could to to prefix multiple routes
 with a common pattern. Don't worry if it looks a bit complicated, you don't need it for now:
 
 ```php
 array(
-    
+
     //Define a common prefix for routes
     'type'      => 'prefix',
     'path'   => 'user/<userId>/',
     'resolver' => array(
         'type'      => 'group',
         'resolvers' => array(
-        
+
             //would handle /user/5/friends to Friends::userFriends()
             'friends' => array(
                 'path'  => 'friends',
@@ -193,7 +193,7 @@ array(
                     'action'    => 'userFriends'
                 )
             ),
-            
+
             //would handle /user/5/profile to Profile::userProfile()
             'profile' => array(
                 'path'  => 'profile',
@@ -216,10 +216,10 @@ As you probably already noticed each action takes a `Request` as a parameter and
 Accessing request data can be done simply by:
 
 ```php
-//$_GET['name'] 
+//$_GET['name']
 $request->query()->get('name');
 
-//$_POST['name'] 
+//$_POST['name']
 $request->data()->get('name');
 
 //Getting a routing attribute
@@ -294,7 +294,7 @@ return $httpResponses->download('report.csv', 'text/csv', $contents);
 
 PHPixie comes with a powerful templating engine that supports layouts, blocks, partials, custom extensions and formats.
 By default the bundle is configured to locate templates from the `bundles/app/assets/templates` folder.
-It already contains two templates used to display the default greeting by the `Greet` processor. 
+It already contains two templates used to display the default greeting by the `Greet` processor.
 
 Let's start by creating a simple template:
 
@@ -303,7 +303,7 @@ Let's start by creating a simple template:
 
 <!--
 The $_() function is used to HTML encode your strings.
-Which makes sure string containing special symbols 
+Which makes sure string containing special symbols
 don't break your layout and prevents some XSS attacks
 -->
 <p><?php echo $_($message); ?></p>
@@ -318,7 +318,7 @@ Now lets add another action to the Quickstart processor to render it:
     public function renderAction(Request $request)
     {
         $template = $this->builder->components()->template();
-        
+
         return $template->render(
             'app:quickstart/message',
             array(
@@ -330,7 +330,7 @@ Now lets add another action to the Quickstart processor to render it:
 }
 ```
 
-Visit http://localhost/quickstart/render and see the result
+Visit [http://localhost/quickstart/render](http://localhost/quickstart/render) and see the result
 
 If you prefer adding variables to the template one by one instead of passing an array in one go
 you can also use the alternative approach:
@@ -372,7 +372,7 @@ and update the `message` template:
 <p><?php echo $_($message); ?></p>
 ```
 
-Now http://localhost/quickstart/render will display the template wrapped inside the layout.
+Now [http://localhost/quickstart/render](http://localhost/quickstart/render) will display the template wrapped inside the layout.
 
 Layouts also support blocks to allow child templates to override and append content to their layouts.
 
@@ -516,16 +516,16 @@ We can already use ORM to query these items from the database. Lets add an `orm`
     public function ormAction(Request $request)
     {
         $orm = $this->builder->->components()->orm();
-        
+
         $projects = $orm->query('project')->find();
-        
+
         //Convert enttities to simple PHP objects
         return $projects->asArray(true);
     }
 //...
 ```
 
-Now by visiting http://localhost/quickstart/orm you will get a JSON response with project data.
+Now by visiting [http://localhost/quickstart/orm](http://localhost/quickstart/orm) you will get a JSON response with project data.
 Before we take a deeper look at what you can do with the PHPixie ORM lets configure a one-to-many
 relationship between projects and tasks.
 
@@ -540,7 +540,7 @@ return array(
             'type'  => 'oneToMany',
             'owner' => 'project',
             'items' => 'task',
-            
+
             //When a project is deleted
             //also delete all its tasks
             'itemsOptions' => array(
@@ -608,7 +608,7 @@ $orm->query('project')
     ->where('tasksTotal', '>', 2)
     ->or('tasksDone', '<', 5)
     ->find();
-    
+
 //Conditions groups
 //WHERE name = 'Quickstart' OR ( ... )
 $orm->query('project')
@@ -629,7 +629,7 @@ $orm->query('project')
         ->or('tasksDone', '<', 5)
     ->endGroup()
     ->find();
-    
+
 //Compare columns using '*' in operators
 //Find projects where tasksTotal = tasksDone
 $orm->query('project')
@@ -640,7 +640,7 @@ $orm->query('project')
 $orm->query('project')
     ->relatedTo('task')
     ->find();
-    
+
 //Find a project related to a specific task
 $orm->query('project')
     ->where('tasks.name', 'Routing')
@@ -667,7 +667,7 @@ $orm->query('project')->update(array(
 //Useful for pagination
 $query = $orm->query('project')
     ->where('tasksTotal', '=*', 'tasksDone');
-    
+
 $count = $query->count();
 
 $query
@@ -736,7 +736,7 @@ class ORMWrappers extends \PHPixie\ORM\Wrappers\Implementation
     protected $databaseEntities = array(
         'project'
     );
-    
+
     public function projectEntity($entity)
     {
         return new ORMWrappers\Project($entity);
