@@ -515,7 +515,7 @@ We can already use ORM to query these items from the database. Lets add an `orm`
 //...
     public function ormAction(Request $request)
     {
-        $orm = $this->builder->->components()->orm();
+        $orm = $this->builder->components()->orm();
 
         $projects = $orm->query('project')->find();
 
@@ -555,7 +555,7 @@ return array(
 Creating, updating and deleting entities is straightforward:
 
 ```php
-$orm = $this->builder->->components()->orm();
+$orm = $this->builder->components()->orm();
 
 //Create an Entity
 $projectRepository = $orm->repository('project');
@@ -592,7 +592,7 @@ foreach($projects as $project) {
 Here is just some things that you can do with the ORM queries now:
 
 ```php
-$orm = $this->builder->->components()->orm();
+$orm = $this->builder->components()->orm();
 
 //Find project by name
 $orm->query('project')->where('name', 'Quickstart')->findOne();
@@ -614,7 +614,7 @@ $orm->query('project')
 $orm->query('project')
     ->where('name', 'Quickstart')
     ->or(function($query) {
-        $querty
+        $query
             ->where('tasksTotal', '>', 2)
             ->or('tasksDone', '<', 5);
     })
@@ -680,7 +680,7 @@ The ORM component features multiple optimizations to help you reduce the number 
 For example it is possible to attach multiple tasks to a single project without getting them all one by one.
 
 ```php
-$orm = $this->builder->->components()->orm();
+$orm = $this->builder->components()->orm();
 
 //Query representing the first project in the database
 $projectQuery = $orm->query('project');
