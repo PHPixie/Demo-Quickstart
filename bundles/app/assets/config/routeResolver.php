@@ -5,6 +5,17 @@ return array(
     'defaults'  => array('action' => 'default'),
     'resolvers' => array(
 
+        // Two routes for social login redirect and callback
+        'socialAuth' => array(
+            'path' => 'socialAuth(/<provider>)',
+            'defaults' => ['processor' => 'socialAuth']
+        ),
+
+        'socialAuthCallback' => array(
+            'path' => 'socialAuth/callback/<provider>',
+            'defaults' => ['processor' => 'socialAuth', 'action' => 'callback']
+        ),
+
         // We add a custom 'page' parameter that is used by the pagination
         'messages' => array(
             'path' => 'page(/<page>)',

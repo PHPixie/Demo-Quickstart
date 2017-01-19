@@ -42,6 +42,14 @@ $this->set('pageTitle', "Sign In");
 
                 <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
             </form>
+            <hr/>
+
+            <!-- Social login URLs -->
+            <?php $url = $this->httpPath('app.socialAuth', ['provider' => 'twitter']); ?>
+            <a class="btn btn-lg btn-primary btn-block" href="<?=$url?>">Login with Twitter</a>
+
+            <?php $url = $this->httpPath('app.socialAuth', ['provider' => 'facebook']); ?>
+            <a class="btn btn-lg btn-primary btn-block" href="<?=$url?>">Login with Facebook</a>
         </div>
 
         <div class="col-md-6">

@@ -10,6 +10,7 @@ class HTTP extends \PHPixie\DefaultBundle\HTTP
      */
     protected $classMap = array(
         'messages'   => 'Project\App\HTTP\Messages',
-        'auth'       => 'Project\App\HTTP\Auth'
+        'auth'       => 'Project\App\HTTP\Auth',
+        'socialAuth' => 'Project\App\HTTP\Auth\Social'
     );
 }

@@ -21,6 +21,14 @@ return [
 
                     // after login persis the user in the session
                     'persistProviders' => ['session']
+                ],
+
+                // Enable social login
+                'social' => [
+                    'type' => 'social.oauth',
+
+                    // after login persis the user in the session
+                    'persistProviders' => ['session']
                 ]
             ]
         ]
