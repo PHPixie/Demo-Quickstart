@@ -6,6 +6,9 @@ use PHPixie\ORM\Models\Type\Database\Repository as DatabaseRepository;
 use PHPixie\ORM\Wrappers\Type\Database\Repository as DatabaseRepositoryWrapper;
 use Project\App\AppBuilder;
 
+/**
+ * Base ORM repository class
+ */
 abstract class Repository extends DatabaseRepositoryWrapper
 {
     /**

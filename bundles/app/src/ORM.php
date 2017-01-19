@@ -7,11 +7,19 @@ namespace Project\App;
  */
 class ORM extends \PHPixie\DefaultBundle\ORM
 {
+    /**
+     * Here we map ORM entities to their wrappers
+     * @var array
+     */
     protected $entityMap = array(
-
+        'user' => 'Project\App\ORM\User'
     );
 
-    protected $repositoryMap = array(
-
-    );
+    /**
+     * Here we map ORM repositories to their wrappers
+     * @var array
+     */
+    protected $repositoryMap = [
+        'user' => 'Project\App\ORM\User\UserRepository'
+    ];
 }

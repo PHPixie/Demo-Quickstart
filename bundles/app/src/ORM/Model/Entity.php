@@ -6,6 +6,9 @@ use PHPixie\ORM\Models\Type\Database\Entity as DatabaseEntity;
 use PHPixie\ORM\Wrappers\Type\Database\Entity as DatabaseEntityWrapper;
 use Project\App\AppBuilder;
 
+/**
+ * Base ORM entity class
+ */
 abstract class Entity extends DatabaseEntityWrapper
 {
     /**

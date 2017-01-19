@@ -35,7 +35,8 @@ class Messages extends Processor
 
         // Pass the data into a template and return it
         return $components->template()->get('app:messages', [
-            'pager' => $pager
+            'pager' => $pager,
+            'user'  => $this->user()
         ]);
     }
 }
