@@ -27,6 +27,7 @@ abstract class Command extends \PHPixie\DefaultBundle\Console\Command
     }
 
     /**
+     * Use this method to configure your command
      * @param Config $config
      * @return void
      */
