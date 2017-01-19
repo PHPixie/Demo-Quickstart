@@ -6,13 +6,12 @@ use PHPixie\HTTP\Request;
 use PHPixie\Validate\Form;
 
 /**
- * Listing and posting messages.
- * Remember to register it in \Project\App\HTTP
+ * Listing and posting messages
  */
 class Messages extends Processor
 {
     /**
-     * Display messages
+     * Display latest messages
      *
      * @param Request $request HTTP request
      * @return mixed
@@ -21,14 +20,22 @@ class Messages extends Processor
     {
         $components = $this->components();
 
-        // Find all messages
-        $messages = $components->orm()->query('message')
-            ->orderDescendingBy('date')
-            ->find();
+        // Create an ORM query for massages
+        $messageQuery = $components->orm()->query('message')
+            ->orderDescendingBy('date');
+
+        // Load the query inside a pager.
+        // We also specify the page size and which relationships to preload
+        $pager = $components->paginateOrm()
+            ->queryPager($messageQuery, 10, ['user']);
+
+        // Set the current page from the route parameter
+        $page = $request->attributes()->get('page', 1);
+        $pager->setCurrentPage($page);
 
         // Pass the data into a template and return it
         return $components->template()->get('app:messages', [
-            'messages' => $messages
+            'pager' => $pager
         ]);
     }
 }
