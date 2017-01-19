@@ -4,9 +4,10 @@ return [
     // Database configuration
     'default' => [
 
-        'database' => 'phpixie',
-        'user'     => 'phpixie',
-        'password' => 'phpixie',
+        // Referencing parameters from /assets/parameters.php
+        'database' => '%database.name%',
+        'user'     => '%database.user%',
+        'password' => '%database.password%',
 
         'adapter'  => 'mysql',
         'driver'   => 'pdo'

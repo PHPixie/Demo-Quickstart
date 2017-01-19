@@ -3,13 +3,15 @@
 return [
     'facebook' => [
         'type'      => 'facebook',
-        'appId'     => 'YOUR APP ID',
-        'appSecret' => 'YOUR APP SECRET'
+
+        // Referencing parameters from /assets/parameters.php
+        'appId'     => '%social.facebookId%',
+        'appSecret' => '%social.facebookSecret%'
     ],
 
     'twitter' => [
         'type'      => 'twitter',
-        'consumerKey'    => 'YOUR APP ID',
-        'consumerSecret' => 'YOUR APP SECRET'
+        'consumerKey'    => '%social.twitterId%',
+        'consumerSecret' => '%social.twitterSecret%'
     ]
 ];
