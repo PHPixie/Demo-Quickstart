@@ -11,7 +11,13 @@ return array(
 
         'processor' => array(
             'path'     => '(<processor>)',
-            'defaults' => array('processor' => 'greet')
+            'defaults' => array('processor' => 'messages')
+        ),
+
+        // We add a shorthand route to the frontpage
+        'frontpage' => array(
+            'path' => '',
+            'defaults' => ['processor' => 'messages']
         )
     )
 );

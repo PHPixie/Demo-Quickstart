@@ -1,11 +1,14 @@
 <?php
 
-return array(
-    'default' => array(
+return [
+    // Database configuration
+    'default' => [
+
         'database' => 'phpixie',
         'user'     => 'phpixie',
         'password' => 'phpixie',
-        'adapter'  => 'mysql', // one of: mysql, pgsql, sqlite
+
+        'adapter'  => 'mysql',
         'driver'   => 'pdo'
-    )
-);
+    ]
+];

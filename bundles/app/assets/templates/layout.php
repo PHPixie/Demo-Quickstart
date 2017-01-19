@@ -1,42 +1,34 @@
 <!DOCTYPE html>
-<html>
-	<head>
-	<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300italic,400italic,700italic,400,300,700&amp;subset=all" rel="stylesheet">
-		<title>PHPixie 3</title>
-		<style>
-			body {
-				font-family: "Roboto Condensed", Helvetica, sans-serif;
-			}
+<html lang="en">
+<head>
+	<!-- Let's try Bootstrap 4 -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
 
-			h1, h2, p {
-				text-align: center;
-			}
+	<!-- Include our own css -->
+	<link rel="stylesheet" href="/bundles/app/main.css">
 
-			h1 {
-				color: #3f444a;
-				font-size: 60px;
-			}
+	<title><?=$_($this->get('pageTitle', 'Quickstart'))?></title>
+</head>
+<body>
 
-			h2 {
-				color: #5c6873;
-				font-weight: 300;
-				font-size: 32px;
-			}
+<!-- Navigation -->
+<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+	<div class="container">
+		<a class="navbar-brand  mr-auto" href="<?=$this->httpPath('app.frontpage')?>">Quickstart</a>
+	</div>
+</nav>
 
-			a {
-				color: #3f444a;
-			}
 
-			a:hover {
-				color: #32c5d2;
-			}
-		</style>
-	</head>
-	<body>
-        <h1>PHPixie 3</h1>
-        <p><img src="https://phpixie.com/images/logo.png" alt="PHPixie"></p>
-		<?php $this->childContent();?>
-		<p><a href="https://gitter.im/PHPixie/Hotline">Hotline Chat</a></p>
-		<p><a href="https://github.com/phpixie/project-auth">Auth Demo Project</a></p>
-	</body>
+<?php $this->childContent(); ?>
+
+
+<!-- Bootstrap dependencies -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.7/js/tether.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+
+</body>
 </html>
