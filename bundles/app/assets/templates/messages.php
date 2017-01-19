@@ -9,6 +9,21 @@ $this->set('pageTitle', "Messages");
 <?php /** @var \PHPixie\Paginate\Pager $pager */ ?>
 
 <div class="container content">
+    <!-- Display message input for registered users on frontpage -->
+    <?php if($user && $pager->currentPage() === 1): ?>
+        <form id="messageForm">
+            <div class="form-group">
+                <textarea name="text" class="form-control" rows="3"></textarea>
+                <div class="form-control-feedback error"></div>
+            </div>
+            <p class="text-right">
+                <button type="submit" class="btn btn-primary float-right">Say something!</button>
+            </p>
+        </form>
+        <div class="clearfix"></div>
+        <hr/>
+    <?php endif; ?>
+
     <!-- Render messages from the pager -->
     <?php foreach($pager->getCurrentItems() as $message): ?>
         <blockquote class="blockquote">
@@ -50,3 +65,14 @@ $this->set('pageTitle', "Messages");
         </ul>
     </nav>
 </div>
+
+<!-- Add our own scripts to the scripts block defined in the layout.php template -->
+<?php $this->startBlock('scripts'); ?>
+<script>
+    $(function() {
+        // Init the form handler
+        <?php $url = $this->httpPath('app.action', ['processor' => 'messages', 'action' => 'post']);?>
+        $('#messageForm').messageForm("<?=$_($url)?>");
+    });
+</script>
+<?php $this->endBlock(); ?>
