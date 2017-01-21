@@ -12,7 +12,7 @@ class ORM extends \PHPixie\DefaultBundle\ORM
      * @var array
      */
     protected $entityMap = array(
-        'user' => 'Project\App\ORM\User'
+        'user' => 'Project\App\ORM\User\User'
     );
 
     /**
