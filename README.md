@@ -62,8 +62,8 @@ connection, run these two commands from the project folder:
 ./console framework:database create # creates the database if it doesn't exist
 ```
 
-Next we create a migration with out database strructure in */assets/migrate/migrations/1_users_and_messages.sql*.
-Migrations make it easy for you to apply changes to the database without having to touch them manyally.
+Next we create a migration with out database structure in */assets/migrate/migrations/1_users_and_messages.sql*.
+Migrations make it easy for you to apply changes to the database without having to touch them manually.
 
 ```php
 CREATE TABLE users(
