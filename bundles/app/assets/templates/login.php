@@ -19,7 +19,7 @@ $this->set('pageTitle', "Sign In");
                 <!-- email field -->
                 <div class="form-group <?=$this->if($loginForm->fieldError('email'), "has-danger")?>">
                     <input name="email" type="text" value="<?=$_($loginForm->fieldValue('email'))?>"
-                           class="form-control" placeholder="Username">
+                           class="form-control" placeholder="Email">
                     <?php if($error = $loginForm->fieldError('email')): ?>
                         <div class="form-control-feedback"><?=$error?></div>
                     <?php endif;?>

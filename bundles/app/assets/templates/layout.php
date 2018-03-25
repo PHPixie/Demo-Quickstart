@@ -36,7 +36,7 @@
 			<ul class="navbar-nav">
 				<li class="nav-item">
 					<?php $url = $this->httpPath('app.processor', ['processor' => 'auth']);?>
-					<a class="nav-link" href="<?=$this->httpPath('app.processor', ['processor' => 'auth'])?>">Sign In</a>
+					<a class="nav-link" href="<?=$url?>">Sign In</a>
 				</li>
 			</ul>
 
